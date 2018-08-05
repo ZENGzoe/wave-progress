@@ -37,7 +37,7 @@ k为偏距，改变改值，可改变水波纹垂直方向的位置。
 
 ## 实现
 
-** 1.画出波浪线 **
+**1.画出波浪线**
 
 ``` javascript
 
@@ -88,7 +88,7 @@ wave.init()
 
 ![](https://github.com/ZENGzoe/wave-progress/blob/master/image/wave.png)
 
-** 2.添加波浪流动效果 **
+**2.添加波浪流动效果**
 
 ```javascript
 var wave = {
@@ -128,7 +128,7 @@ wave.init()
 
 ![](https://github.com/ZENGzoe/wave-progress/blob/master/image/waving.gif)
 
-** 3.雏形 **
+**3.雏形**
 
 画出水波纹进度条整体雏形，添加色彩～
 
@@ -182,7 +182,7 @@ wave.init()
 
 ![](https://github.com/ZENGzoe/wave-progress/blob/master/image/container.gif)
 
-** 4.添加波浪溢满效果 **
+**4.添加波浪溢满效果**
 
 可以通过偏距`k`即`offsetY`来移动波浪的垂直方向的高度，但由于canvas的y轴方向与正弦曲线的y轴相反，填充的方向相同，故在本例子中，通过修改y轴初始值来实现该效果。
 
@@ -220,7 +220,7 @@ wave.init()
 
 ![](https://github.com/ZENGzoe/wave-progress/blob/master/image/fill.gif)
 
-** 5.添加海浪真实感 **
+**5.添加海浪真实感**
 
 通过添加多一条颜色深的波浪来实现海浪真实感。
 
@@ -265,7 +265,7 @@ wave.init()
 
 ![](https://github.com/ZENGzoe/wave-progress/blob/master/image/addWave.gif)
 
-** 6.添加进度数据 **
+**6.添加进度数据**
 
 ```
 var wave = {
