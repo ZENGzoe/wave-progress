@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0" name="viewport">
+    <title>水波纹进度条实现原理</title>
+</head>
+<style type="text/css">
+    body{
+        background: #dbeff2;
+    }
+    canvas{
+        position: fixed;
+        top:50%;
+        left:50%;
+        transform:translate3d(-50%,-50%,0);
+        -webkit-transform:translate3d(-50%,-50%,0);
+    }
+    .proNum{
+        font-size:3rem;
+        position: fixed;
+        top:50%;
+        left:50%;
+        color:#fff;
+        transform:translate3d(-50%,-50%,0);
+        -webkit-transform:translate3d(-50%,-50%,0);
+        font-weight: bold;
+    }
+</style>
+<body>
+    <div class="box">
+        <canvas id="canvas"></canvas>
+        <span class="proNum">0%</span>
+    </div>
+    <script>
+        var wave = {
+            speed : 50 ,   //波浪横向流动速度
+            offsetX : 0 ,   //波浪横向偏移量
+            isDrawContainer : false,        //判断是否画了容器
+            offsetYRange : 1.1 ,            //波浪垂直方向最大范围
+            offsetY : 0,                    //波浪垂直方向位移
+            offsetYSpeed : 0.003,            //波浪溢满
+            progressNum : 0,                    //进度
+            init : function(){
+                var canvas = document.getElementById('canvas'),
+                    winW = document.body.clientWidth;
+                
+                this.ctx = canvas.getContext('2d');
+                canvas.width = winW * 0.6;
+                canvas.height = winW * 0.6;
+
+                this.canvasW = canvas.width;
+
+                this.draw()
+            },
+
+            //所有绘制
+            draw : function(){
+                var ctx = this.ctx;
+
+                ctx.clearRect(0,0,this.canvasW,this.canvasW);
+                this.offsetX += this.speed;
+
+                if(!this.isDrawContainer){
+                    this.drawContainer(ctx);
+                }
+
+                this.drawWave(ctx , this.offsetX , this.offsetY , 0.04 , 6 , '#a4def6');
+                this.drawWave(ctx , this.offsetX + 2 , this.offsetY  - 0.02, 0.04 , 8, '#79d4f9');
+
+                if(this.offsetY < this.offsetYRange){
+                    this.offsetY += this.offsetYSpeed;
+
+                    this.progressNum += 100/(this.offsetYRange/this.offsetYSpeed);
+
+                    document.querySelector('.proNum').innerHTML = parseInt(this.progressNum) + '%';
+                }
+
+                requestAnimationFrame(this.draw.bind(this));
+            },
+
+            drawContainer : function(ctx){
+                var pointR = this.canvasW / 2,
+                    lineWidth = 10 ,
+                    circleR = pointR - (lineWidth);
+
+                ctx.lineWidth = lineWidth;
+                ctx.beginPath();
+                ctx.arc(pointR,pointR,circleR,0,2 * Math.PI);
+                ctx.strokeStyle = 'rgba(192,225,242,0.3)';
+                ctx.stroke();
+                ctx.clip();
+                this.isDrawContainer = true;
+            },
+
+            //画波浪线
+            drawWave : function(ctx , offsetX , offsetY , waveW , waveH , color){
+                var canvasW = this.canvasW,
+                    startX = 0;     //波浪线初始x轴坐标
+
+                ctx.beginPath();
+
+                var startPos = [startX];
+                
+                for(var x = startX ; x < canvasW ; x += 20 / canvasW){
+                    //正弦曲线公式：y=Asin(ωx+φ)+k
+                    var y = (1 - offsetY) * canvasW + waveH * Math.sin((startX + x) * waveW + offsetX); 
+
+                    if(startPos.length == 1){startPos.push(y)}
+
+                    ctx.lineTo(x , y);
+                }
+                //画出完整的波浪形状
+                ctx.lineTo(canvasW , canvasW);
+                ctx.lineTo(startX , canvasW);
+                ctx.lineTo(startPos[0] , startPos[1]);
+                ctx.fillStyle = color;
+                ctx.fill();
+            }
+        }
+        wave.init()
+    </script>
+</body>
+</html>
